@@ -20,6 +20,8 @@
             <button class="btn btn-default" type="button" ng-click="$ctrl.geolocateAndSearch()">По моему местоположению</button>
         </div>
     </form>
+    <h3 class="h3" ng-if="$ctrl.details && $ctrl.forecasts.length">Текущая погода в {{$ctrl.searchText}}</h3>
+    <h3 class="h3" ng-if="!$ctrl.details && $ctrl.forecasts.length">Текущая погода в Вашем регионе</h3>
     <div ng-if="$ctrl.forecasts" ng-repeat="forecast in $ctrl.forecasts" class="col-md-3 col-sm-4 col-xs-12">
         <div class="weather-block bg-info">
             <h4 class="h4">Дата: {{forecast.dateTime | date: 'dd.MM HH:00'}}</h4>
