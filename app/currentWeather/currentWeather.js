@@ -16,11 +16,7 @@
             vm.submit = submit;
             vm.geolocateAndSearch = geolocateAndSearch;
             vm.alerts = [];
-            vm.getAll = getAll;
-            vm.getSchema = getSchema;
             vm.autocompleteOptions =  { types: '(cities)' };
-            vm.requests = {};
-            vm.schema = {};
 
             vm.addAlert = function(type, msg) {
                 vm.alerts.push({type: type, msg: msg});
@@ -29,8 +25,6 @@
             vm.closeAlert = function(index) {
                 vm.alerts.splice(index, 1);
             };
-
-
 
             function submit(details){
                 var LatLng = {
@@ -49,14 +43,13 @@
 
             function geolocate(){
                 return $q(function(resolve, reject){
-                    if ("geolocation" in navigator) {
+                    if ('geolocation' in navigator) {
                         navigator.geolocation.getCurrentPosition(function(position) {
                                 resolve(position);
                             },
                             function(){
                                 reject('Вы не предоставили доступ к Вашему местоположению, однако Вы все равно можете найти погоду, воспользовавшись формой поиска.')
                             });
-                        /* геолокация доступна */
                     } else {
                         reject('К сожалению, Ваш браузер не поддерживает функцию геолокации. Воспользуйтесь формой пооска, пожалуйста.');
                     }
@@ -81,36 +74,9 @@
                     });
             }
 
-            function getSchema(){
-                return ForecastService.getSchema()
-                    .then(function(data){
-                        vm.schema = data;
-                        vm.tableHeaders = Object.keys(data).map(function(header, index) {
-                            return hideUnusedHeaders(header);
-                        });
-                        vm.translatedTableHeaders = vm.tableHeaders.map(function(header){
-                            return translateTableHeaders(header);
-                        });
-                        console.log(vm.tableHeaders)
-                    })
-                    .catch(function(err){
-                        //TODO: handle error
-                    });
-            }
-            function getAll(params){
-                return ForecastService.getAll(params)
-                    .then(function(data){
-                        vm.requests = data;
-                    })
-                    .catch(function(err){
-                        //TODO: handle error
-                    });
-            }
-
-
         }])
 
-        .service('CurrentWeatherService', ['config', 'weatherConfig', '$http', '$q', function(config, weatherConfig, $http, $q){
+        .service('CurrentWeatherService', ['weatherConfig', '$http', '$q', function(weatherConfig, $http, $q){
             return {
                 getCurrentWeatherByLatLng: getCurrentWeatherByLatLng
             };
@@ -135,7 +101,6 @@
 
             function processResponse(response){
                 var resp = Object.assign({}, response);
-                console.log('original url', resp);
                 var usefulData = {};
                 usefulData.temp = Math.round(resp.main.temp - 273); // Convert from Kelvin to Celsius
                 usefulData.pressure =  Math.round(resp.main.pressure * 0.75006375541921); // Convert hPa to mmHg

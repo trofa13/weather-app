@@ -16,6 +16,7 @@
             var vm = this;
             vm.submit = submit;
             vm.geolocateAndSearch = geolocateAndSearch;
+            vm.autocompleteOptions =  { types: '(cities)' };
             vm.alerts = [];
 
             vm.addAlert = function(type, msg) {
@@ -57,14 +58,13 @@
 
             function geolocate(){
                 return $q(function(resolve, reject){
-                    if ("geolocation" in navigator) {
+                    if ('geolocation' in navigator) {
                         navigator.geolocation.getCurrentPosition(function(position) {
                                 resolve(position);
                             },
                             function(){
                                 reject('Вы не предоставили доступ к Вашему местоположению, однако Вы все равно можете найти погоду, воспользовавшись формой поиска.')
                             });
-                        /* геолокация доступна */
                     } else {
                         reject('К сожалению, Ваш браузер не поддерживает функцию геолокации. Воспользуйтесь формой пооска, пожалуйста.');
                     }
