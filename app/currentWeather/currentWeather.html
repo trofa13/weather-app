@@ -1,0 +1,61 @@
+<h1 class="h1">Текущая погода</h1>
+
+<div class="jumbotron">
+    <div uib-alert
+         dismiss-on-timeout="5000"
+         ng-repeat="alert in $ctrl.alerts"
+         ng-class="'alert-' + (alert.type || 'warning')"
+         close="$ctrl.closeAlert($index)">
+        {{alert.msg}}
+    </div>
+    <form novalidate ng-submit="$ctrl.submit($ctrl.details)">
+        <input class="form-control"
+               type="text"
+               ng-autocomplete
+               ng-model="$ctrl.searchText"
+               options="$ctrl.autocompleteOptions"
+               details="$ctrl.details">
+        <div class="button-wrapper">
+            <button class="btn btn-success pull-right" type="submit" ng-disabled="!$ctrl.details" title="Введите запрос"> Искать!</button>
+            <button class="btn btn-default" type="button" ng-click="$ctrl.geolocateAndSearch()">По моему местоположению</button>
+        </div>
+    </form>
+
+    <div ng-if="$ctrl.currentWeather" class="bg-info weather-block center-block">
+        <h3 class="h3" ng-if="$ctrl.details">Текущая погода в {{$ctrl.searchText}}</h3>
+        <h3 class="h3" ng-if="!$ctrl.details">Текущая погода в Вашем регионе</h3>
+        <div class="center-block mw-50">
+            <img ng-src="{{$ctrl.currentWeather.iconUrl}}"/>{{$ctrl.currentWeather.description | capitalize}}<br/>
+            Ветер {{$ctrl.currentWeather.windDirection}}, {{$ctrl.currentWeather.windSpeed}} м/с<br/>
+            Температура - {{$ctrl.currentWeather.temp}} C<sup>o</sup><br/>
+            Давление - {{$ctrl.currentWeather.pressure}} мм.рт.ст.<br>
+            Влажность - {{$ctrl.currentWeather.humidity}} %
+        </div>
+        <a ng-if="$ctrl.LatLng" class="btn btn-success" ng-href="#!/forecast/{{$ctrl.LatLng}}">А если прогноз?</a>
+    </div>
+
+</div>
+
+<style>
+    .weather-block{
+        padding: 10px;
+        margin-top: 10px;
+        border-radius: 10px;
+    }
+
+    .button-wrapper{
+        margin-top: 5px;
+    }
+
+    @media(max-width: 480px){
+        .button-wrapper button{
+            width: 100%;
+        }
+
+        .button-wrapper button:not(:first-child){
+            margin-top: 5px;
+        }
+    }
+</style>
+
+
